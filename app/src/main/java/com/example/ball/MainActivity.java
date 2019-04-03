@@ -8,6 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private State mState = State.IDLE;
 
-    private double mMinAcc = 4.0d;           // m/s^2
+    private double mMinAcc = 11.0d;           // m/s^2
     private double mMaxAcceleration = 0.0d;  // the highest acceleration during a throw (m/s^2)
     private double mVelocity = 0.0d;
     private double mInitialVelocity = 0.0d;
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private double mHighestThrow = 0.0d;
 
-    int mSlidingWindowSize = 20;
+    int mSlidingWindowSize = 10;
     int mSlidingWindowIndex = 0;
     double[] mSlidingWindow;
 
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mSensor;
 
     private Handler mHandler;
-    private int mHandlerDelay = 10;
+    private int mHandlerDelay = 32;
     Runnable mRunnable;
 
     //private TextView mTxtX;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView mTxtScore;
     private TextView mTxtHighScore;
     private Button mBtnPrefs;
+
+    private Vibrator mVib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 startActivityForResult(intent, 0);
             }
         });
+
+        mVib = (Vibrator)this.getSystemService(VIBRATOR_SERVICE);
+
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                update();
+                mHandler.postDelayed(this, mHandlerDelay);
+            }
+        };
+        mHandler.postDelayed(mRunnable, mHandlerDelay);
     }
 
     @Override
@@ -135,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 if (maxIndex == 0) {
                     mState = State.THROWN;
+                    mVib.vibrate(VibrationEffect.createOneShot(150,10));
                     mHeight = 0.0d;
                     mVelocity = mMaxAcceleration;
                     mInitialVelocity = mVelocity;
@@ -148,14 +165,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mElapsedTime = 0.0d;
                     mSlidingWindowIndex = 0;
 
-                    mRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            update();
-                            mHandler.postDelayed(this, mHandlerDelay);
-                        }
-                    };
-                    mHandler.postDelayed(mRunnable, mHandlerDelay);
                 }
                 for (int i = 0; i < mSlidingWindowSize - 1; i++) {
                     mSlidingWindow[i] = mSlidingWindow[i + 1];
@@ -198,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mVelocity = newVelocity;
 
             if (mElapsedTime >= mTimeOfThrow) {
+                mVib.vibrate(VibrationEffect.createOneShot(150,10));
                 mState = State.IDLE;
                 mHandler.removeCallbacks(mRunnable);
             }
