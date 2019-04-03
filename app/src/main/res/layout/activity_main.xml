@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <!--
+    <TextView
+        android:id="@+id/txt_x"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+    <TextView
+        android:id="@+id/txt_y"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+    <TextView
+        android:id="@+id/txt_z"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+    -->
+    <TextView
+        android:id="@+id/txt_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="throw phone"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+    <TextView
+        android:id="@+id/txt_high_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+    <Button
+        android:id="@+id/btn_prefs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Preferences"/>
+
+</LinearLayout>
